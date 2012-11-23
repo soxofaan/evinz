@@ -42,8 +42,10 @@
 			.attr("transform", "translate(" + plot_margin.left + "," + plot_margin.top + ")");
 
 		// X scale: range based on data time stamps
-		dmin = d3.min(data);
-		dmax = d3.max(data);
+		var dmin = d3.min(data);
+		var dmax = d3.max(data);
+		var ddiff = dmax - dmin;
+		var transition_delay_function = function(d) { return 500 * (d - dmin) / (dmax - dmin); };
 		var x = d3.time.scale()
 			.domain([1.02 * dmin - 0.02 * dmax, 1.02 * dmax - 0.02 * dmin])
 			.range([0, plot_width]);
@@ -77,7 +79,11 @@
 		lines.enter().append('line')
 			.attr('class', 'event')
 			.attr('x1', x).attr('y1', dot_plot_yscale(0))
-			.attr('x2', x).attr('y2', dot_plot_yscale(1));
+			.attr('x2', x).attr('y2', dot_plot_yscale(0))
+			.transition()
+				.delay(transition_delay_function)
+				.attr('y2', dot_plot_yscale(1));
+
 		// Exiting lines
 		lines.exit().remove();
 
@@ -89,7 +95,9 @@
 		dots.enter().append('circle')
 			.attr('class', 'event')
 			.attr('cx', x).attr('cy', dot_plot_yscale(0))
-			.attr('r', 3);
+			.transition()
+				.delay(transition_delay_function)
+				.attr('r', 3);
 		// Exiting dots
 		dots.exit().remove();
 
@@ -121,8 +129,12 @@
 		bars.attr('class', 'bar')
 			.attr('width', function(d) {return x(d.x+d.dx) - x(d.x); })
 			.attr('x', function(d) { return x(d.x); })
-			.attr('y', function(d) { return histogram_yscale(d.y); })
-			.attr('height', function(d) { return histogram_yscale(0) - histogram_yscale(d.y); });
+			.attr('y', function(d) { return histogram_yscale(0); })
+			.attr('height', 0)
+			.transition()
+				.delay(function (d) { return transition_delay_function(d.x); })
+				.attr('y', function(d) { return histogram_yscale(d.y); })
+				.attr('height', function(d) { return histogram_yscale(0) - histogram_yscale(d.y); });
 
 		// Y axis for histogram
 		var histogram_yaxis = d3.svg.axis()

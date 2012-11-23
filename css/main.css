@@ -1,26 +1,37 @@
 
+body {
+  font: 10px sans-serif;
+}
+
 circle.event {
-	fill: #89a;
-	stroke: #345;
+	fill: #6D968D;
+	stroke: #1F3642;
 	stroke-width: 1px;
 }
 
 line.event {
-	stroke: #345;
+	stroke: #6D968D;
 	stroke-width: 1px;
 	shape-rendering: crispEdges;
 }
 
 rect.bar {
-	fill: #8a9;
-	stroke-width: 0px;
+	fill: #6D968D;
+	stroke: #B6CCB8;
+	stroke-width: .5px;
 }
 
 .axis path, .axis line {
 	fill: none;
-	stroke: #666;
 	stroke-width: 1px;
 	shape-rendering: crispEdges;
 }
 
 
+.axis line {
+	stroke: #FFE2B3;
+}
+
+.axis path {
+	stroke: #56493F;
+}

@@ -11,6 +11,11 @@ line.event {
 	shape-rendering: crispEdges;
 }
 
+rect.bar {
+	fill: #8a9;
+	stroke-width: 0px;
+}
+
 .axis path, .axis line {
 	fill: none;
 	stroke: #666;

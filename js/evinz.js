@@ -90,8 +90,30 @@
 		dots.exit().remove();
 
 
-		var range = d3.time.day.range(d3.min(data), d3.max(data));
-		console.log(range);
+		// Build histogram
+		var histogram_builder = d3.layout.histogram();
+		// How to transform date to a number, so histogram can do it's thing
+		histogram_builder.value(function(date) { return date.getTime(); });
+		histogram_builder.bins(32);
+		// Feed the data to build the histogram.
+		histogram = histogram_builder(data);
+
+
+		histogram_yscale = d3.scale.linear()
+			.domain([0, d3.max(histogram, function(d) { return d.y; })])
+			.range([plot_height, 0]);
+
+		// Histrogram plot
+		var histogram_plot = plot.insert('g', '.dot-plot')
+			.attr('class', 'histogram-plot');
+		var bars = histogram_plot.selectAll('.bar').data(histogram);
+		bars.enter().append('rect');
+		bars.exit().remove();
+		bars.attr('class', 'bar')
+			.attr('width', function(d) {return x(d.x+d.dx) - x(d.x); })
+			.attr('x', function(d) { return x(d.x); })
+			.attr('y', function(d) { return histogram_yscale(d.y); })
+			.attr('height', function(d) { return histogram_yscale(0) - histogram_yscale(d.y); });
 
 
 	};

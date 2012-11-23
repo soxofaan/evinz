@@ -1,11 +1,21 @@
 
 circle.event {
-    fill: #aaa;
-    stroke: #666;
-    stroke-width: 1.5px;
+	fill: #89a;
+	stroke: #345;
+	stroke-width: 1px;
 }
 
 line.event {
-    stroke: #666;
-    stroke-width: 1.5px;
+	stroke: #345;
+	stroke-width: 1px;
+	shape-rendering: crispEdges;
 }
+
+.axis path, .axis line {
+	fill: none;
+	stroke: #666;
+	stroke-width: 1px;
+	shape-rendering: crispEdges;
+}
+
+

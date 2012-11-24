@@ -1,27 +1,7 @@
 (function(window, $, d3) {
 
-	var get_data = function() {
-		// Get data from text field
-		var text = $('#input-textarea').val();
-		var format = $('#input-time-format').val();
-		format = d3.time.format(format);
 
-		var lines = text.split('\n');
-		var data = [];
-		for (var i = 0; i < lines.length; i++) {
-			var t = format.parse(lines[i]);
-			if (t) {
-				data.push(t);
-			}
-		}
-		return data;
-	};
-
-	window.evinz = function() {
-
-		// Get data.
-		// TODO: pass this as argument.
-		var data = get_data();
+	window.evinz = function(data) {
 
 		// Get SVG canvas to use
 		// TODO: pass this as argument?
@@ -108,10 +88,10 @@
 		histogram_builder.value(function(date) { return date.getTime(); });
 		histogram_builder.bins(64);
 		// Feed the data to build the histogram.
-		histogram = histogram_builder(data);
+		var histogram = histogram_builder(data);
 
 		// Scale for the histogram data
-		histogram_yscale = d3.scale.linear()
+		var histogram_yscale = d3.scale.linear()
 			.domain([0, d3.max(histogram, function(d) { return d.y; }) + 1])
 			.range([histogram_plot_height, 0]);
 
@@ -150,4 +130,3 @@
 
 })(window, jQuery, d3);
 
-evinz();

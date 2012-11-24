@@ -213,7 +213,7 @@ Sat Apr 7 03:39:35 2012
 Sat Apr 7 03:35:35 2012
 </textarea>
 <input type="text" name="format" id="input-time-format" value="%a %b %d %H:%M:%S %Y" />
-<input type="button" value="Go!" name="gobutton" onclick="evinz();" />
+<input type="button" value="Go!" name="gobutton" onclick="evinz(get_data());" />
 </div>
 
 <svg width="1024" height="600" id="evinz-plot"></svg>
@@ -223,6 +223,29 @@ Sat Apr 7 03:35:35 2012
 <script src="js/vendor/jquery-1.8.3.min.js"></script>
 <script src="js/vendor/d3.v2.min.js"></script>
 <script src="js/evinz.js"></script>
+
+<script type="text/javascript">
+    var get_data = function() {
+        // Get data from text field
+        var text = $('#input-textarea').val();
+        var format = $('#input-time-format').val();
+        format = d3.time.format(format);
+
+        var lines = text.split('\n');
+        var data = [];
+        for (var i = 0; i < lines.length; i++) {
+            var t = format.parse(lines[i]);
+            if (t) {
+                data.push(t);
+            }
+        }
+        return data;
+    };
+    data = get_data();
+
+evinz(data);
+
+    </script>
 
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
 <script>

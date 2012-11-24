@@ -13,8 +13,8 @@
 		var plot_margin = {top: 30, bottom: 10, left: 40, right: 20, vertical_padding: 10};
 		var plot_width = svg_width - plot_margin.left - plot_margin.right;
 		var plot_height = svg_height - plot_margin.top - plot_margin.bottom;
-		var dot_plot_height = 40;
-		var histogram_plot_top = plot_margin.vertical_padding + dot_plot_height + plot_margin.vertical_padding;
+		var marker_plot_height = 40;
+		var histogram_plot_top = plot_margin.vertical_padding + marker_plot_height + plot_margin.vertical_padding;
 		var histogram_plot_height = plot_height - histogram_plot_top;
 
 		var plot_area = svg.append('g')
@@ -40,46 +40,39 @@
 			.attr('class', 'axis')
 			.call(axis);
 
-		// Event dot plot
-		var dot_plot = plot_area
+		// Setu up event marker plot
+		var marker_plot = plot_area
 			.append('g')
-			.attr('class', 'dot-plot')
+			.attr('class', 'marker-plot')
 			.attr('transform', 'translate(0,' + plot_margin.vertical_padding + ')');
 		// Y scale: based on data (counts). TODO
-		var dot_plot_yscale = d3.scale.linear()
+		var marker_plot_yscale = d3.scale.linear()
 			.domain([0, 1])
-			.range([dot_plot_height, 0]);
+			.range([marker_plot_height, 0]);
 
-		// First weight/count lines
-		var lines = dot_plot.selectAll("line.event").data(data);
-		lines
-			.attr('x1', x).attr('y1', dot_plot_yscale(0))
-			.attr('x2', x).attr('y2', dot_plot_yscale(1));
-		// Entering lines
-		lines.enter().append('line')
-			.attr('class', 'event')
-			.attr('x1', x).attr('y1', dot_plot_yscale(0))
-			.attr('x2', x).attr('y2', dot_plot_yscale(0))
+		// Draw event marker plot based on data
+		var markers = marker_plot.selectAll('g.marker').data(data);
+		var marker_transform_function = function (d) { return 'translate(' + x(d) + ',0)'; };
+		// Update existing markers
+		markers.attr('transform', marker_transform_function);
+		// Add entering markers
+		var entering_markers = markers.enter()
+			.append('g')
+			.attr('class', 'marker')
+			.attr('transform', marker_transform_function);
+		entering_markers.append('line')
+			.attr('y1', marker_plot_yscale(0))
+			.attr('y2', marker_plot_yscale(0))
 			.transition()
 				.delay(transition_delay_function)
-				.attr('y2', dot_plot_yscale(1));
-
-		// Exiting lines
-		lines.exit().remove();
-
-		// Event dots
-		var dots = dot_plot.selectAll("circle.event").data(data);
-		dots
-			.attr('cx', x).attr('cy', dot_plot_yscale(0));
-		// Entering dots
-		dots.enter().append('circle')
-			.attr('class', 'event')
-			.attr('cx', x).attr('cy', dot_plot_yscale(0))
+				.attr('y2', marker_plot_yscale(1));
+		entering_markers.append('circle')
+			.attr('cy', marker_plot_yscale(0))
 			.transition()
 				.delay(transition_delay_function)
 				.attr('r', 3);
-		// Exiting dots
-		dots.exit().remove();
+		// Remove exiting markers
+		markers.exit().remove();
 
 
 		// Build histogram

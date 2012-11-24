@@ -3,13 +3,13 @@ body {
   font: 10px sans-serif;
 }
 
-circle.event {
+.marker-plot g.marker circle {
 	fill: #6D968D;
 	stroke: #1F3642;
 	stroke-width: 1px;
 }
 
-line.event {
+.marker-plot g.marker line {
 	stroke: #6D968D;
 	stroke-width: 1px;
 	shape-rendering: crispEdges;
